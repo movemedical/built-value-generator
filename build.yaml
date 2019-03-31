@@ -1,0 +1,36 @@
+targets:
+  $default:
+    builders:
+      built_value_generator|built_value:
+        enabled: true
+        generate_for:
+          exclude: ["**.ser.dart"]
+
+      built_value_generator|built_serializers_for:
+        enabled: true
+        generate_for:
+          include: ["**.ser.dart"]
+
+      source_gen|combining_builder:
+        enabled: true
+        generate_for:
+          exclude: ["**.ser.dart"]
+
+builders:
+  built_value:
+    target: ":built_value_generator"
+    import: "package:built_value_generator/builder.dart"
+    builder_factories: ["builtValue"]
+    build_extensions: {".dart": [".built_value.g.part"]}
+    auto_apply: dependents
+    build_to: cache
+    applies_builders: ["source_gen|combining_builder"]
+
+  built_serializers_for:
+    target: ":built_value_generator"
+    import: "package:built_value_generator/builder.dart"
+    builder_factories: ["builtSerializersFor"]
+    build_extensions: {".ser.dart": [".ser.gg.part"]}
+    auto_apply: none
+    build_to: source
+    applies_builders: ["source_gen|combining_builder"]
