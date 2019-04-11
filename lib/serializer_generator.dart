@@ -63,6 +63,7 @@ class MoveSerializerBuilder extends Builder {
       buffer.writeln('import \'package:built_value/serializer.dart\';');
       buffer.writeln(
           'import \'package:built_collection/built_collection.dart\';');
+      buffer.writeln('import \'package:modux/modux.dart\';');
 
       imports.map.values.forEach((import) {
         buffer.writeln(import.importFile);
@@ -172,9 +173,15 @@ class SourceImport implements Comparable<SourceImport> {
 
 final _formatter = DartFormatter();
 
+String _cleanFullName(String fullName) {
+  if (fullName.startsWith('/')) fullName = fullName.substring(1);
+  return fullName.replaceFirst('/lib/', '/').replaceFirst('|lib/', '/');
+}
+
 class Imports {
   final core = SourceImport('', '', '');
   final unknown = SourceImport('', '', '');
+  final modux = SourceImport('', '', '');
   final built_value = SourceImport('', '', '');
   final built_collection = SourceImport('', '', '');
   final map = <String, SourceImport>{};
@@ -187,17 +194,25 @@ class Imports {
     final source = element.source;
     if (source == null) return unknown;
 
-    if (source.fullName.startsWith('built_value')) {
+    String cleanedFullName = _cleanFullName(source.fullName);
+
+    if (cleanedFullName.startsWith('modux')) {
+      return modux;
+    }
+
+    if (cleanedFullName.startsWith('built_value')) {
       return built_value;
     }
-    if (source.fullName.startsWith('built_collection')) {
+    if (cleanedFullName.startsWith('built_collection')) {
       return built_collection;
     }
     var import = map[source.fullName];
     if (import == null) {
       final libraryName = '_${count++}';
+
       import = SourceImport(source.fullName, libraryName,
-          'import \'package:${source.fullName.replaceFirst('|lib/', '/')}\' as $libraryName;');
+          'import \'package:$cleanedFullName\' as $libraryName;');
+//          'import \'package:${_cleanFullName(source.fullName)}\' as $libraryName;');
       map[source.fullName] = import;
     }
     return import;

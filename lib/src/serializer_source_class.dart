@@ -72,8 +72,13 @@ abstract class SerializerSourceClass
   //////////////////////////////////////////////////
   /// Full Name including package and path
   //////////////////////////////////////////////////
+  String _cleanFullName(String fullName) {
+    if (fullName.startsWith('/')) fullName = fullName.substring(1);
+    return fullName.replaceFirst('/lib/', '/').replaceFirst('|lib/', '/');
+  }
+
   String get fullName =>
-      '${_removeFileName('${element.source.fullName.replaceFirst('|lib/', '/')}')}/$name';
+      '${_removeFileName('${_cleanFullName(element.source.fullName)}')}/$name';
 
   static String _removeFileName(String name) {
     if (!name.endsWith('.dart')) return name;
