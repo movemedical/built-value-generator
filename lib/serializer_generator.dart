@@ -89,6 +89,8 @@ class MoveSerializerBuilder extends Builder {
         }
 
         addImport(imports.built_collection);
+        addImport(imports.built_value);
+        addImport(imports.modux);
 
         imports.map.values.forEach(addImport);
 
