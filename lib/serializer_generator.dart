@@ -63,7 +63,7 @@ class MoveSerializerBuilder extends Builder {
       buffer.writeln('import \'package:built_value/serializer.dart\';');
       buffer.writeln(
           'import \'package:built_collection/built_collection.dart\';');
-      buffer.writeln('import \'package:modux/modux.dart\';');
+//      buffer.writeln('import \'package:modux/modux.dart\';');
 
       imports.map.values.forEach((import) {
         buffer.writeln(import.importFile);
@@ -183,7 +183,7 @@ String _cleanFullName(String fullName) {
 class Imports {
   final core = SourceImport('', '', '');
   final unknown = SourceImport('', '', '');
-  final modux = SourceImport('', '', '');
+//  final modux = SourceImport('', '', '');
   final built_value = SourceImport('', '', '');
   final built_collection = SourceImport('', '', '');
   final map = <String, SourceImport>{};
@@ -198,9 +198,9 @@ class Imports {
 
     String cleanedFullName = _cleanFullName(source.fullName);
 
-    if (cleanedFullName.startsWith('modux')) {
-      return modux;
-    }
+//    if (cleanedFullName.startsWith('modux')) {
+//      return modux;
+//    }
 
     if (cleanedFullName.startsWith('built_value')) {
       return built_value;
